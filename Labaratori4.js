@@ -97,15 +97,40 @@ function callback() {
 }
 
 // Последовательный вызов функций
+/*
 console.log('start');
-readConfig('myConfig', function() {
-    doQuery('select * from cities', function() {
-        httpGet('http://google.com', function() {
-            readFile('README.md', callback);
+
+readConfig('myConfig', () => {
+    doQuery('select * from cities', () => {
+        httpGet('http://google.com', () => {
+            readFile('README.md', () => {
+                console.log('It is done!');
+            });
         });
     });
 });
+
 console.log('end');
+
+function notify(next) {
+    return function () {
+        next();
+    };
+}
+
+console.log('start');
+
+readConfig('myConfig', notify(() =>
+    doQuery('select * from cities', notify(() =>
+        httpGet('http://google.com', notify(() =>
+            readFile('README.md', notify(() =>
+                console.log('It is done!')
+            ))
+        ))
+    ))
+));
+
+console.log('end'); */
 
 
 
@@ -136,10 +161,10 @@ function f3(x, callback) {
     }, Math.random() * 1000);
 }
 
-function calculateF(x, n) {
+function calculateF(x, n, functionsForN6) {
     let currentResult = 0;
 
-    const functions = [f1, f2, f3].slice(0, n); // Отобрать только n функций
+    const functions = functionsForN6.slice(0, n); // Отобрать только n функций
 
     function executeFunction(index) {
         if (index < functions.length) {
@@ -184,7 +209,7 @@ function f6(x, callback) {
 }
 
 const functionsForN6 = [f1, f2, f3, f4, f5, f6]; // Добавляем все функции
-calculateF(3, 6); // Вычисляем F(3) для n=6
+calculateF(3, 6, functionsForN6); // Вычисляем F(3) для n=6
 
 
 
